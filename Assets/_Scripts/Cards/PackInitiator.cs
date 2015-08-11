@@ -29,8 +29,7 @@ public class PackInitiator : MonoBehaviour
 
     public void ArrangePack()
     {
-        //ArrangeCards();
-        d
+        //ArrangeCards();        
     }
 
     public void InitiatePack(List<GameObject> cards)
@@ -60,6 +59,7 @@ public class PackInitiator : MonoBehaviour
 
             GameObject cardPosPointObj = Instantiate(cardsPositionPointsObject, cardPosition, Quaternion.identity) as GameObject;
             cardPosPointObj.transform.parent = transform;
+            cardPosPointObj.transform.localScale = Vector3.one * 1.25f;
             cardPosPointObj.GetComponent<CardsPositionPoints>().cards = cardObj.GetComponent<Cards>() as Cards;
             cardPosPointObj.GetComponent<CardsPositionPoints>().id = cardsPositionPointsID;
             cardsPositionPointsID++;
@@ -77,8 +77,6 @@ public class PackInitiator : MonoBehaviour
 
         }
     }
-
-
 
     void PlaceDeckCardOnPlayerIenum(Cards cards)
     {
@@ -101,7 +99,6 @@ public class PackInitiator : MonoBehaviour
         cards.transform.rotation = Quaternion.Euler(cardRotation.x, cardRotation.y, cardRotation.z);
 
     }
-
 
     public void DestroyCardPosition(CardsPositionPoints point)
     {
@@ -139,7 +136,6 @@ public class PackInitiator : MonoBehaviour
             tempPosition = tempPosition2;
         }
     }
-
 
     public void ArrangeByColor()
     {
@@ -277,20 +273,17 @@ public class PackInitiator : MonoBehaviour
         }
     }
 
-
     public void ArrangeByOrder()
     {
-
+        Debug.Log("Called");
         int indexCount = 0;
 
         for (int a = 0; a < cardnumber.Length; a++)
         {
-
             int cardNumber = cardnumber[a];
 
             for (int i = indexCount; i < cardsPositionPoints.Count; i++)
             {
-
                 if (cardsPositionPoints[i].cards.number == cardNumber)
                 {
                     indexCount++;
