@@ -1,0 +1,166 @@
+fileFormatVersion: 2
+guid: 5e4ddbd1000eb8b4e8019e2504170f7a
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: Card
+    100002: Card01
+    100004: Card02
+    100006: Card03
+    100008: Card04
+    100010: Card05
+    100012: Card06
+    100014: Card07
+    100016: Card08
+    100018: Card09
+    100020: Card10
+    100022: Card11
+    100024: Chair
+    100026: //RootNode
+    100028: Lag
+    100030: Object01
+    100032: Object02
+    100034: Poker game bace
+    100036: Poker game border
+    100038: Poker game border bace
+    100040: Poker game border cover
+    100042: Poker Table
+    100044: Shape01
+    400000: Card
+    400002: Card01
+    400004: Card02
+    400006: Card03
+    400008: Card04
+    400010: Card05
+    400012: Card06
+    400014: Card07
+    400016: Card08
+    400018: Card09
+    400020: Card10
+    400022: Card11
+    400024: Chair
+    400026: //RootNode
+    400028: Lag
+    400030: Object01
+    400032: Object02
+    400034: Poker game bace
+    400036: Poker game border
+    400038: Poker game border bace
+    400040: Poker game border cover
+    400042: Poker Table
+    400044: Shape01
+    2300000: Card
+    2300002: Card01
+    2300004: Card02
+    2300006: Card03
+    2300008: Card04
+    2300010: Card05
+    2300012: Card06
+    2300014: Card07
+    2300016: Card08
+    2300018: Card09
+    2300020: Card10
+    2300022: Card11
+    2300024: Lag
+    2300026: Object01
+    2300028: Object02
+    2300030: Poker game bace
+    2300032: Poker game border
+    2300034: Poker game border bace
+    2300036: Poker game border cover
+    2300038: Shape01
+    3300000: Card
+    3300002: Card01
+    3300004: Card02
+    3300006: Card03
+    3300008: Card04
+    3300010: Card05
+    3300012: Card06
+    3300014: Card07
+    3300016: Card08
+    3300018: Card09
+    3300020: Card10
+    3300022: Card11
+    3300024: Lag
+    3300026: Object01
+    3300028: Object02
+    3300030: Poker game bace
+    3300032: Poker game border
+    3300034: Poker game border bace
+    3300036: Poker game border cover
+    3300038: Shape01
+    4300000: Shape01
+    4300002: Object02
+    4300004: Object01
+    4300006: Card
+    4300008: Card01
+    4300010: Poker game border
+    4300012: Poker game border bace
+    4300014: Poker game bace
+    4300016: Lag
+    4300018: Poker game border cover
+    4300020: Card02
+    4300022: Card03
+    4300024: Card04
+    4300026: Card05
+    4300028: Card06
+    4300030: Card07
+    4300032: Card08
+    4300034: Card09
+    4300036: Card10
+    4300038: Card11
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .100000001
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
