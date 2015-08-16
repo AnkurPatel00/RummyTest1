@@ -161,8 +161,25 @@ public class PackInitiator : MonoBehaviour
 
     public void ArrangeByColor()
     {
-        ArrangeByColorOld();
-        //cardsPositionPointsList.fin
+        //  ArrangeByColorOld();
+        List<List<CardsPositionPoints>> m_Cards = new List<List<CardsPositionPoints>>();
+        for (int i = 0; i < cardname.Length; i++)
+        {
+            List<CardsPositionPoints> m_cardname = cardsPositionPointsList.FindAll(x => x.cards.cardName == cardname[i]);
+            //  Debug.Log(m_cardname.Count + cardname[i]);
+            m_cardname = m_cardname.OrderBy(x => x.cards.number).ToList();
+            m_Cards.Add(m_cardname);
+        }
+        cardsPositionPointsList.Clear();
+        for (int i = 0; i < m_Cards.Count; i++)
+        {
+            cardsPositionPointsList.AddRange(m_Cards[i]);
+        }
+        SetPositionOfCards();
+        //for (int i = 0; i < cardsPositionPointsList.Count; i++)
+        //{
+        //    Debug.Log(cardsPositionPointsList[i].cards.number);
+        //}
     }
 
     public void ArrangeByOrder()
@@ -173,7 +190,6 @@ public class PackInitiator : MonoBehaviour
 
     void ArrangeByOrderOld()
     {
-        Debug.Log("Called");
         int indexCount = 0;
 
         for (int a = 0; a < cardnumber.Length; a++)
@@ -364,7 +380,7 @@ public class PackInitiator : MonoBehaviour
             for (int i = 0; i < 15; i++)
             {
                 PlayerCardsPosArray[i] = m_cardPos;
-                m_cardPos += cardIncrement;              
+                m_cardPos += cardIncrement;
             }
         }
     }
@@ -372,7 +388,7 @@ public class PackInitiator : MonoBehaviour
     void SetPositionOfCards()
     {
         for (int i = 0; i < cardsPositionPointsList.Count; i++)
-        {            
+        {
             cardsPositionPointsList[i].transform.position = PlayerCardsPosArray[i];
         }
     }
