@@ -124,13 +124,13 @@ public class AIPlayerController : MonoBehaviour {
 			
 			int cardNumber = cardnumber[a];
 			
-			for(int i = 0; i < packInitiator.cardsPositionPoints.Count; i++){
+			for(int i = 0; i < packInitiator.cardsPositionPointsList.Count; i++){
 				
-				if(packInitiator.cardsPositionPoints[i].cards.number == cardNumber){
+				if(packInitiator.cardsPositionPointsList[i].cards.number == cardNumber){
 					int n = IsNumberPresentInai_CardTracker(ai_SingleCards,cardNumber);
 					if(n == -1){
 						AI_SingleCards ai_SingleCardsTemp = new AI_SingleCards();
-						ai_SingleCardsTemp.cardName = packInitiator.cardsPositionPoints[i].cards.cardName;
+						ai_SingleCardsTemp.cardName = packInitiator.cardsPositionPointsList[i].cards.cardName;
 						ai_SingleCardsTemp.cardNumber = cardNumber;
 						ai_SingleCardsTemp.numberOfTimes+=1;
 						ai_SingleCardsTemp.packInitiatorIndex = i;
@@ -151,9 +151,9 @@ public class AIPlayerController : MonoBehaviour {
 
 		for(int i = 0; i < ai_SingleCards.Count; i++){
 			if(ai_SingleCards[i].numberOfTimes <= 1){
-				packInitiator.cardsPositionPoints[ai_SingleCards[i].packInitiatorIndex].cards.renderer.enabled = true;
-				packInitiator.cardsPositionPoints[ai_SingleCards[i].packInitiatorIndex].cards.cardType = CardType.deck;
-				packInitiator.cardsPositionPoints[ai_SingleCards[i].packInitiatorIndex].cards.StartAnimation(tempCardHolder);
+				packInitiator.cardsPositionPointsList[ai_SingleCards[i].packInitiatorIndex].cards.renderer.enabled = true;
+				packInitiator.cardsPositionPointsList[ai_SingleCards[i].packInitiatorIndex].cards.cardType = CardType.deck;
+				packInitiator.cardsPositionPointsList[ai_SingleCards[i].packInitiatorIndex].cards.StartAnimation(tempCardHolder);
 				singleCardFound = true;
 				break;
 			}

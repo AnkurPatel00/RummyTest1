@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
 
     int PlayerCardsCount()
     {
-        int count = packInitiator.cardsPositionPoints.Count;
+        int count = packInitiator.cardsPositionPointsList.Count;
         for (int i = 0; i < dashBoardCardHolder.Count; i++)
         {
             count += dashBoardCardHolder[i].cardsPositionPoints.Count;
@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                if (packInitiator.cardsPositionPoints.Count >= 15)
+                if (packInitiator.cardsPositionPointsList.Count >= 15)
                 {
                     dialog = "Your firs move must \n be a discard from your hand"; //"Cant Change Turn,\n" + "Through or Show card";
                     UIEventHandler.Ins.OpenMenu("PickCardNotification");
@@ -284,9 +284,9 @@ public class PlayerController : MonoBehaviour
             pickedDeckCards.cardType = CardType.deck;
             pickedDeckCards = null;
         }
-        if (packInitiator.cardsPositionPoints.Count >= 15)
+        if (packInitiator.cardsPositionPointsList.Count >= 15)
             turnType = TurnType.throughtorshow;
-        else if (packInitiator.cardsPositionPoints.Count < 15)
+        else if (packInitiator.cardsPositionPointsList.Count < 15)
             turnType = TurnType.pick;
 
     }
@@ -412,7 +412,7 @@ public class PlayerController : MonoBehaviour
                 if (lessThanThreePairCards && lessThanThreePairCardsCount <= 2)
                 {
 
-                    if (packInitiator.cardsPositionPoints.Count <= 2)
+                    if (packInitiator.cardsPositionPointsList.Count <= 2)
                     {
                         print("count less than 3 packInitiator.cardsPositionPoints.Count <= 0");
                         turnType = TurnType.none;
@@ -441,7 +441,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        if (packInitiator.cardsPositionPoints.Count <= 2)
+                        if (packInitiator.cardsPositionPointsList.Count <= 2)
                         {
                             print("gameover");
                             UIEventHandler.Ins.OpenMenu("GameOverNotification");
@@ -586,7 +586,7 @@ public class PlayerController : MonoBehaviour
                 if (lessThanThreePairCards && lessThanThreePairCardsCount <= 2)
                 {
                     //dashBoardCardHolder[i].doNotCheckforsequence = true;
-                    if (packInitiator.cardsPositionPoints.Count <= 0)
+                    if (packInitiator.cardsPositionPointsList.Count <= 0)
                     {
                         //print ("count less than 3 packInitiator.cardsPositionPoints.Count <= 0");
                         turnType = TurnType.none;
@@ -597,7 +597,7 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         //print ("count less than 3 packInitiator.cardsPositionPoints.Count >= 0");
-                        if (packInitiator.cardsPositionPoints.Count <= 2)
+                        if (packInitiator.cardsPositionPointsList.Count <= 2)
                         {
                             UIEventHandler.Ins.OpenMenu("GameOverNotification");
                             turnType = TurnType.none;
@@ -626,7 +626,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        if (packInitiator.cardsPositionPoints.Count <= 2)
+                        if (packInitiator.cardsPositionPointsList.Count <= 2)
                         {
                             print("gameover");
                             UIEventHandler.Ins.OpenMenu("GameOverNotification");

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class PackInitiator : MonoBehaviour
 {
@@ -18,7 +19,19 @@ public class PackInitiator : MonoBehaviour
 
     public Texture2D cardBack;
 
-    public List<CardsPositionPoints> cardsPositionPoints = new List<CardsPositionPoints>();
+    private List<CardsPositionPoints> m_cardsPositionPointsList;
+    public List<CardsPositionPoints> cardsPositionPointsList
+    {
+        get
+        {
+            return m_cardsPositionPointsList;
+        }
+        set
+        {
+            m_cardsPositionPointsList = value;
+            SetPositionOfCards();
+        }
+    }
 
     private string[] cardname = new string[] { "club", "diamond", "heart", "spade" };
     private int[] cardnumber = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
@@ -26,6 +39,16 @@ public class PackInitiator : MonoBehaviour
     private int cardsPositionPointsID = 0;
 
     public bool isAiInitiator;
+
+    public Vector3[] PlayerCardsPosArray;
+
+    void Start()
+    {
+        m_cardsPositionPointsList = new List<CardsPositionPoints>();
+        cardsPositionPointsList = new List<CardsPositionPoints>();
+        PlayerCardsPosArray = new Vector3[15];
+        SetArrayForDefautCardPosition();
+    }
 
     public void ArrangePack()
     {
@@ -63,7 +86,7 @@ public class PackInitiator : MonoBehaviour
             cardPosPointObj.GetComponent<CardsPositionPoints>().cards = cardObj.GetComponent<Cards>() as Cards;
             cardPosPointObj.GetComponent<CardsPositionPoints>().id = cardsPositionPointsID;
             cardsPositionPointsID++;
-            cardsPositionPoints.Add(cardPosPointObj.GetComponent<CardsPositionPoints>());
+            cardsPositionPointsList.Add(cardPosPointObj.GetComponent<CardsPositionPoints>());
 
             cardObj.transform.parent = cardPosPointObj.transform;
             cardObj.GetComponent<Cards>().cardsPositionPoints = cardPosPointObj.GetComponent<CardsPositionPoints>() as CardsPositionPoints;
@@ -74,7 +97,6 @@ public class PackInitiator : MonoBehaviour
             count++;
             yield return new WaitForSeconds(0.0f);
             cardObj.transform.rotation = Quaternion.Euler(cardRotation.x, cardRotation.y, cardRotation.z);
-
         }
     }
 
@@ -86,7 +108,7 @@ public class PackInitiator : MonoBehaviour
         cardPosPointObj.GetComponent<CardsPositionPoints>().cards = cards;
         cardPosPointObj.GetComponent<CardsPositionPoints>().id = cardsPositionPointsID;
         cardsPositionPointsID++;
-        cardsPositionPoints.Add(cardPosPointObj.GetComponent<CardsPositionPoints>());
+        cardsPositionPointsList.Add(cardPosPointObj.GetComponent<CardsPositionPoints>());
 
         cards.transform.parent = cardPosPointObj.transform;
         cards.cardsPositionPoints = cardPosPointObj.GetComponent<CardsPositionPoints>() as CardsPositionPoints;
@@ -106,22 +128,22 @@ public class PackInitiator : MonoBehaviour
         int index = 0;
         bool flag = false;
 
-        for (int i = 0; i < cardsPositionPoints.Count; i++)
+        for (int i = 0; i < cardsPositionPointsList.Count; i++)
         {
-            if (cardsPositionPoints[i].id == point.id)
+            if (cardsPositionPointsList[i].id == point.id)
             {
                 flag = true;
                 index = i;
             }
         }
 
-        Vector3 tempPosition = cardsPositionPoints[index].transform.position;
+        Vector3 tempPosition = cardsPositionPointsList[index].transform.position;
 
         if (flag)
         {
 
-            Destroy(cardsPositionPoints[index].gameObject);
-            cardsPositionPoints.RemoveAt(index);
+            Destroy(cardsPositionPointsList[index].gameObject);
+            cardsPositionPointsList.RemoveAt(index);
             cardPosition -= cardIncrement;
         }
         else
@@ -129,15 +151,76 @@ public class PackInitiator : MonoBehaviour
             print("not found");
         }
 
-        for (int i = index; i < cardsPositionPoints.Count; i++)
+        for (int i = index; i < cardsPositionPointsList.Count; i++)
         {
-            Vector3 tempPosition2 = cardsPositionPoints[i].transform.position;
-            cardsPositionPoints[i].transform.position = tempPosition;
+            Vector3 tempPosition2 = cardsPositionPointsList[i].transform.position;
+            cardsPositionPointsList[i].transform.position = tempPosition;
             tempPosition = tempPosition2;
         }
     }
 
     public void ArrangeByColor()
+    {
+        ArrangeByColorOld();
+        //cardsPositionPointsList.fin
+    }
+
+    public void ArrangeByOrder()
+    {
+        //ArrangeByOrderOld();           
+        cardsPositionPointsList = cardsPositionPointsList.OrderBy(x => x.cards.number).ToList();
+    }
+
+    void ArrangeByOrderOld()
+    {
+        Debug.Log("Called");
+        int indexCount = 0;
+
+        for (int a = 0; a < cardnumber.Length; a++)
+        {
+            int cardNumber = cardnumber[a];
+
+            for (int i = indexCount; i < cardsPositionPointsList.Count; i++)
+            {
+                if (cardsPositionPointsList[i].cards.number == cardNumber)
+                {
+                    indexCount++;
+                }
+                else
+                {
+                    for (int j = i + 1; j < cardsPositionPointsList.Count; j++)
+                    {
+                        if (cardsPositionPointsList[i].cards.number != cardNumber)
+                        {
+                            if (cardsPositionPointsList[j].cards.number == cardNumber)
+                            {
+                                //spawing position
+                                Vector3 tempPosition = cardsPositionPointsList[j].cards.gameObject.transform.position;
+                                cardsPositionPointsList[j].cards.gameObject.transform.position = cardsPositionPointsList[i].cards.gameObject.transform.position;
+                                cardsPositionPointsList[i].cards.gameObject.transform.position = tempPosition;
+                                //spawing parents
+                                Transform tempParent = cardsPositionPointsList[j].cards.gameObject.transform.parent;
+                                cardsPositionPointsList[j].cards.gameObject.transform.parent = cardsPositionPointsList[i].cards.gameObject.transform.parent;
+                                cardsPositionPointsList[i].cards.gameObject.transform.parent = tempParent;
+                                //spawing CardsPositionPoints
+                                CardsPositionPoints tempcardsPositionPoint = cardsPositionPointsList[j].cards.cardsPositionPoints;
+                                cardsPositionPointsList[j].cards.cardsPositionPoints = cardsPositionPointsList[i].cards.cardsPositionPoints;
+                                cardsPositionPointsList[i].cards.cardsPositionPoints = tempcardsPositionPoint;
+                                //spawing cards
+                                Cards tempCards = cardsPositionPointsList[i].cards;
+                                cardsPositionPointsList[i].cards = cardsPositionPointsList[j].cards;
+                                cardsPositionPointsList[j].cards = tempCards;
+
+                                indexCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void ArrangeByColorOld()
     {
 
         int indexCount = 0;
@@ -147,37 +230,37 @@ public class PackInitiator : MonoBehaviour
 
             string cardName = cardname[a];
 
-            for (int i = indexCount; i < cardsPositionPoints.Count; i++)
+            for (int i = indexCount; i < cardsPositionPointsList.Count; i++)
             {
 
-                if (cardsPositionPoints[i].cards.cardName == cardName)
+                if (cardsPositionPointsList[i].cards.cardName == cardName)
                 {
                     indexCount++;
                 }
                 else
                 {
-                    for (int j = i + 1; j < cardsPositionPoints.Count; j++)
+                    for (int j = i + 1; j < cardsPositionPointsList.Count; j++)
                     {
-                        if (cardsPositionPoints[i].cards.cardName != cardName)
+                        if (cardsPositionPointsList[i].cards.cardName != cardName)
                         {
-                            if (cardsPositionPoints[j].cards.cardName == cardName)
+                            if (cardsPositionPointsList[j].cards.cardName == cardName)
                             {
                                 //spawing position
-                                Vector3 tempPosition = cardsPositionPoints[j].cards.gameObject.transform.position;
-                                cardsPositionPoints[j].cards.gameObject.transform.position = cardsPositionPoints[i].cards.gameObject.transform.position;
-                                cardsPositionPoints[i].cards.gameObject.transform.position = tempPosition;
+                                Vector3 tempPosition = cardsPositionPointsList[j].cards.gameObject.transform.position;
+                                cardsPositionPointsList[j].cards.gameObject.transform.position = cardsPositionPointsList[i].cards.gameObject.transform.position;
+                                cardsPositionPointsList[i].cards.gameObject.transform.position = tempPosition;
                                 //spawing parents
-                                Transform tempParent = cardsPositionPoints[j].cards.gameObject.transform.parent;
-                                cardsPositionPoints[j].cards.gameObject.transform.parent = cardsPositionPoints[i].cards.gameObject.transform.parent;
-                                cardsPositionPoints[i].cards.gameObject.transform.parent = tempParent;
+                                Transform tempParent = cardsPositionPointsList[j].cards.gameObject.transform.parent;
+                                cardsPositionPointsList[j].cards.gameObject.transform.parent = cardsPositionPointsList[i].cards.gameObject.transform.parent;
+                                cardsPositionPointsList[i].cards.gameObject.transform.parent = tempParent;
                                 //spawing CardsPositionPoints
-                                CardsPositionPoints tempcardsPositionPoint = cardsPositionPoints[j].cards.cardsPositionPoints;
-                                cardsPositionPoints[j].cards.cardsPositionPoints = cardsPositionPoints[i].cards.cardsPositionPoints;
-                                cardsPositionPoints[i].cards.cardsPositionPoints = tempcardsPositionPoint;
+                                CardsPositionPoints tempcardsPositionPoint = cardsPositionPointsList[j].cards.cardsPositionPoints;
+                                cardsPositionPointsList[j].cards.cardsPositionPoints = cardsPositionPointsList[i].cards.cardsPositionPoints;
+                                cardsPositionPointsList[i].cards.cardsPositionPoints = tempcardsPositionPoint;
                                 //spawing cards
-                                Cards tempCards = cardsPositionPoints[i].cards;
-                                cardsPositionPoints[i].cards = cardsPositionPoints[j].cards;
-                                cardsPositionPoints[j].cards = tempCards;
+                                Cards tempCards = cardsPositionPointsList[i].cards;
+                                cardsPositionPointsList[i].cards = cardsPositionPointsList[j].cards;
+                                cardsPositionPointsList[j].cards = tempCards;
                                 indexCount++;
                             }
                         }
@@ -195,11 +278,11 @@ public class PackInitiator : MonoBehaviour
             int endIndex = 0;
             bool checkStartIndex = true;
             bool checkEndIndex = false;
-            for (int i = 0; i < cardsPositionPoints.Count; i++)
+            for (int i = 0; i < cardsPositionPointsList.Count; i++)
             {
                 if (checkStartIndex)
                 {
-                    if (cardsPositionPoints[i].cards.cardName == cardname[a])
+                    if (cardsPositionPointsList[i].cards.cardName == cardname[a])
                     {
                         startIndex = i;
                         checkStartIndex = false;
@@ -208,18 +291,18 @@ public class PackInitiator : MonoBehaviour
                 }
                 else if (checkEndIndex)
                 {
-                    if (cardsPositionPoints[i].cards.cardName != cardname[a])
+                    if (cardsPositionPointsList[i].cards.cardName != cardname[a])
                     {
                         endIndex = i - 1;
                         checkEndIndex = false;
                     }
                 }
                 // we never get endindex bec there is no other name card left in the array to get endindex for spade
-                if (i == (cardsPositionPoints.Count - 1))
+                if (i == (cardsPositionPointsList.Count - 1))
                 {
                     if (checkEndIndex)
                     {//&& (cardname[a] == "club" || cardname[a] == "diamond" || cardname[a] == "heart" || cardname[a] == "spade")
-                        endIndex = cardsPositionPoints.Count - 1;
+                        endIndex = cardsPositionPointsList.Count - 1;
                     }
                 }
             }
@@ -234,7 +317,7 @@ public class PackInitiator : MonoBehaviour
                 for (int i = indexCount; i <= endIndex; i++)
                 {
 
-                    if (cardsPositionPoints[i].cards.number == cardNumber)
+                    if (cardsPositionPointsList[i].cards.number == cardNumber)
                     {
                         indexCount++;
                     }
@@ -242,26 +325,26 @@ public class PackInitiator : MonoBehaviour
                     {
                         for (int j = i + 1; j <= endIndex; j++)
                         {
-                            if (cardsPositionPoints[i].cards.number != cardNumber)
+                            if (cardsPositionPointsList[i].cards.number != cardNumber)
                             {
-                                if (cardsPositionPoints[j].cards.number == cardNumber)
+                                if (cardsPositionPointsList[j].cards.number == cardNumber)
                                 {
                                     //spawing position
-                                    Vector3 tempPosition = cardsPositionPoints[j].cards.gameObject.transform.position;
-                                    cardsPositionPoints[j].cards.gameObject.transform.position = cardsPositionPoints[i].cards.gameObject.transform.position;
-                                    cardsPositionPoints[i].cards.gameObject.transform.position = tempPosition;
+                                    Vector3 tempPosition = cardsPositionPointsList[j].cards.gameObject.transform.position;
+                                    cardsPositionPointsList[j].cards.gameObject.transform.position = cardsPositionPointsList[i].cards.gameObject.transform.position;
+                                    cardsPositionPointsList[i].cards.gameObject.transform.position = tempPosition;
                                     //spawing parents
-                                    Transform tempParent = cardsPositionPoints[j].cards.gameObject.transform.parent;
-                                    cardsPositionPoints[j].cards.gameObject.transform.parent = cardsPositionPoints[i].cards.gameObject.transform.parent;
-                                    cardsPositionPoints[i].cards.gameObject.transform.parent = tempParent;
+                                    Transform tempParent = cardsPositionPointsList[j].cards.gameObject.transform.parent;
+                                    cardsPositionPointsList[j].cards.gameObject.transform.parent = cardsPositionPointsList[i].cards.gameObject.transform.parent;
+                                    cardsPositionPointsList[i].cards.gameObject.transform.parent = tempParent;
                                     //spawing CardsPositionPoints
-                                    CardsPositionPoints tempcardsPositionPoint = cardsPositionPoints[j].cards.cardsPositionPoints;
-                                    cardsPositionPoints[j].cards.cardsPositionPoints = cardsPositionPoints[i].cards.cardsPositionPoints;
-                                    cardsPositionPoints[i].cards.cardsPositionPoints = tempcardsPositionPoint;
+                                    CardsPositionPoints tempcardsPositionPoint = cardsPositionPointsList[j].cards.cardsPositionPoints;
+                                    cardsPositionPointsList[j].cards.cardsPositionPoints = cardsPositionPointsList[i].cards.cardsPositionPoints;
+                                    cardsPositionPointsList[i].cards.cardsPositionPoints = tempcardsPositionPoint;
                                     //spawing cards
-                                    Cards tempCards = cardsPositionPoints[i].cards;
-                                    cardsPositionPoints[i].cards = cardsPositionPoints[j].cards;
-                                    cardsPositionPoints[j].cards = tempCards;
+                                    Cards tempCards = cardsPositionPointsList[i].cards;
+                                    cardsPositionPointsList[i].cards = cardsPositionPointsList[j].cards;
+                                    cardsPositionPointsList[j].cards = tempCards;
 
                                     indexCount++;
                                 }
@@ -273,52 +356,24 @@ public class PackInitiator : MonoBehaviour
         }
     }
 
-    public void ArrangeByOrder()
+    void SetArrayForDefautCardPosition()
     {
-        Debug.Log("Called");
-        int indexCount = 0;
-
-        for (int a = 0; a < cardnumber.Length; a++)
+        if (!isAiInitiator)
         {
-            int cardNumber = cardnumber[a];
-
-            for (int i = indexCount; i < cardsPositionPoints.Count; i++)
+            Vector3 m_cardPos = cardPosition;
+            for (int i = 0; i < 15; i++)
             {
-                if (cardsPositionPoints[i].cards.number == cardNumber)
-                {
-                    indexCount++;
-                }
-                else
-                {
-                    for (int j = i + 1; j < cardsPositionPoints.Count; j++)
-                    {
-                        if (cardsPositionPoints[i].cards.number != cardNumber)
-                        {
-                            if (cardsPositionPoints[j].cards.number == cardNumber)
-                            {
-                                //spawing position
-                                Vector3 tempPosition = cardsPositionPoints[j].cards.gameObject.transform.position;
-                                cardsPositionPoints[j].cards.gameObject.transform.position = cardsPositionPoints[i].cards.gameObject.transform.position;
-                                cardsPositionPoints[i].cards.gameObject.transform.position = tempPosition;
-                                //spawing parents
-                                Transform tempParent = cardsPositionPoints[j].cards.gameObject.transform.parent;
-                                cardsPositionPoints[j].cards.gameObject.transform.parent = cardsPositionPoints[i].cards.gameObject.transform.parent;
-                                cardsPositionPoints[i].cards.gameObject.transform.parent = tempParent;
-                                //spawing CardsPositionPoints
-                                CardsPositionPoints tempcardsPositionPoint = cardsPositionPoints[j].cards.cardsPositionPoints;
-                                cardsPositionPoints[j].cards.cardsPositionPoints = cardsPositionPoints[i].cards.cardsPositionPoints;
-                                cardsPositionPoints[i].cards.cardsPositionPoints = tempcardsPositionPoint;
-                                //spawing cards
-                                Cards tempCards = cardsPositionPoints[i].cards;
-                                cardsPositionPoints[i].cards = cardsPositionPoints[j].cards;
-                                cardsPositionPoints[j].cards = tempCards;
-
-                                indexCount++;
-                            }
-                        }
-                    }
-                }
+                PlayerCardsPosArray[i] = m_cardPos;
+                m_cardPos += cardIncrement;              
             }
+        }
+    }
+
+    void SetPositionOfCards()
+    {
+        for (int i = 0; i < cardsPositionPointsList.Count; i++)
+        {            
+            cardsPositionPointsList[i].transform.position = PlayerCardsPosArray[i];
         }
     }
 }
